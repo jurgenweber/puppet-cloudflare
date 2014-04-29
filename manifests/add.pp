@@ -20,7 +20,7 @@ define cloudflare::add (
 
   exec { "cloudflare_add_${zone}_${record}":
     command   => "${cloudflare::my_base}/${domain} ${cloudflare::my_base_args} -X PUT -d 'type=${type}&recs=[{\"data\":{\"${my_type}\":\"${destination}\"},\"ttl\":\"${ttl}\",\"proxied\":\"${proxy}\"}]'",
-    logoutput => true,
+    logoutput => false,
     timeout   => 45,
     unless    => "${cloudflare::my_base}/${zone} ${cloudflare::my_base_args} -X GET | /bin/grep ${record} -c",
   }
