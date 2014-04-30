@@ -7,7 +7,7 @@ define cloudflare::delete (
 
   exec { "cloudflare_delete_${domain}":
     command   => "${cloudflare::my_base}/${domain} ${cloudflare::my_base_args} -X DELETE -d 'type=ALL'",
-    logoutput => true,
+    logoutput => false,
     timeout   => 45,
     onlyif    => "${cloudflare::my_base}/${zone} ${cloudflare::my_base_args} -X GET | /bin/grep ${record} -c",
   }
