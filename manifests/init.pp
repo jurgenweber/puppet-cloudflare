@@ -9,7 +9,9 @@ class cloudflare (
   $my_base        = "/usr/bin/curl ${cloudflare_api}"
   $my_base_args   = "${my_tkn} ${my_email} ${my_content}"
 
-  ensure_resource('package', 'curl', {
-    ensure => present,
-  })
+  if ! defined(Package['curl']) {
+    ensure_resource('package', 'curl', {
+      ensure => present,
+    })
+  }
 }
