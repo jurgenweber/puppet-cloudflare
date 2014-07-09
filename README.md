@@ -21,9 +21,9 @@ class { 'cloudflare':
 
 ### Add a DNS Record
 ```ruby
-  cloudflare::add { 'asdf.example.com':
-    domain           => 'example.com/asdf',
-    destination      => 'target.example.com',
+  cloudflare::add { 'sub.domain.com':
+    domain           => 'domain.com/sub.domain.com',
+    destination      => 'target.domain.com',
     type             => 'cname',
     proxy            => true,
     ttl              => 1,
@@ -31,15 +31,42 @@ class { 'cloudflare':
   }
 ```
 
-### Edit a DNS Record - not finished
+### Edit a DNS Record - placeholder class in progress
 ```ruby
-  cloudflare::edit { 'asdf.example.com':
+  cloudflare::edit { 'sub.domain.com':
   }
 ```
 
-### Delete a DNS record - not finished
+### Delete a DNS record - not finished - use with care
 ```ruby
-  cloudflare::delete { 'asdf.example.com':
+  cloudflare::delete { 'sub.domain.com':
+    domain           => 'domain.com/sub.domain.com',
+    require          => Class['cloudflare'],
+  }
+```
+
+### Puppet usage example
+```ruby
+  if $add_dns {
+    # Declare Cloudflare credentials
+    $cloudflare_email = password_lookup("cloudflare_email", 'global')
+    $cloudflare_tkn   = password_lookup("cloudflare_tkn", 'global')
+
+    # Pass Cloudflare credentials
+    class { 'cloudflare':
+      cloudflare_email => "$cloudflare_email",
+      cloudflare_tkn   => "$cloudflare_tkn",
+    }
+
+    # Add the sub.doamin.com
+    cloudflare::add { 'sub.domain.com':
+      domain           => 'domain.com/sub.domain.com',
+      destination      => 'target.domain.com',
+      type             => 'cname',
+      proxy            => true,
+      ttl              => 1,
+      require          => Class['cloudflare'],
+    }
   }
 ```
 
